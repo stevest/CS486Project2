@@ -1,4 +1,4 @@
-﻿Build started 6/14/2016 6:19:55 PM.
+﻿Build started 6/14/2016 11:08:56 PM.
      1>Project "C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\CS486_Project2.vcxproj" on node 2 (build target(s)).
      1>Building with tools version "4.0".
      1>Target "_CheckForInvalidConfigurationAndPlatform" in file "C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.Targets" from project "C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\CS486_Project2.vcxproj" (entry point):
@@ -289,85 +289,88 @@
          Outputs for C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\HASHTABLE.C|C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\MAIN.C:
          	C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\HASHTABLE.OBJ
          	C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\MAIN.OBJ
-         main.c will be compiled as C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\main.c was modified at 6/14/2016 6:19:52 PM.
+         main.c will be compiled as C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\MAIN.H was modified at 6/14/2016 11:08:54 PM.
          Environment Variables passed to tool:
-           VS_UNICODE_OUTPUT=1744
+           VS_UNICODE_OUTPUT=1100
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Program Files\Microsoft MPI\Inc\\" /Zi /nologo /W3 /WX- /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc100.pdb" /Gd /TC /errorReport:prompt main.c
          Tracking command:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\bin\NETFX 4.0 Tools\Tracker.exe /d C:\Windows\Microsoft.NET\Framework\v4.0.30319\FileTracker.dll /i "C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug" /r "C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\MAIN.C" /b MSBuildConsole_CancelEvent04c7165230534b43a967a1d470631055  /c "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe"  /c /I"C:\Program Files\Microsoft MPI\Inc\\" /Zi /nologo /W3 /WX- /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc100.pdb" /Gd /TC /errorReport:prompt main.c
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\bin\NETFX 4.0 Tools\Tracker.exe /d C:\Windows\Microsoft.NET\Framework\v4.0.30319\FileTracker.dll /i "C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug" /r "C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\MAIN.C" /b MSBuildConsole_CancelEvent8386901ad4604eb8a27c5c0a63a10181  /c "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe"  /c /I"C:\Program Files\Microsoft MPI\Inc\\" /Zi /nologo /W3 /WX- /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc100.pdb" /Gd /TC /errorReport:prompt main.c
          main.c
      1>main.c(84): warning C4013: 'del' undefined; assuming extern returning int
-     1>main.c(89): warning C4013: 'end' undefined; assuming extern returning int
+     1>main.c(97): warning C4013: 'end' undefined; assuming extern returning int
      1>main.c(12): warning C4101: 'nodepoolentriesk' : unreferenced local variable
      1>main.c(9): warning C4101: 'instructionmsg' : unreferenced local variable
      1>main.c(12): warning C4101: 'nodepoolentriesv' : unreferenced local variable
      1>main.c(13): warning C4101: 'claimedfilepoolkeys' : unreferenced local variable
      1>main.c(11): warning C4101: 'filepoolnumel' : unreferenced local variable
      1>main.c(9): warning C4101: 'ctr' : unreferenced local variable
-     1>main.c(17): warning C4101: 'resultlen' : unreferenced local variable
      1>main.c(9): warning C4101: 'size' : unreferenced local variable
-     1>main.c(18): warning C4101: 'status' : unreferenced local variable
-     1>main.c(16): warning C4101: 'errstr' : unreferenced local variable
-     1>main.c(11): warning C4101: 'nodepoolnumel' : unreferenced local variable
      1>main.c(13): warning C4101: 'filepoolkeys' : unreferenced local variable
      1>main.c(11): warning C4101: 'claimedfilepoolnumel' : unreferenced local variable
-     1>main.c(131): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>main.c(169): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
-     1>main.c(160): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>main.c(218): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
-     1>main.c(147): warning C4101: 'nodepoolentriesk' : unreferenced local variable
-     1>main.c(144): warning C4101: 'err' : unreferenced local variable
-     1>main.c(200): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>main.c(123): warning C4101: 'instructionmsg' : unreferenced local variable
+     1>main.c(123): warning C4101: 'buff' : unreferenced local variable
+     1>main.c(125): warning C4101: 'actioncompleted' : unreferenced local variable
+     1>main.c(123): warning C4101: 'err' : unreferenced local variable
+     1>main.c(253): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
-     1>main.c(187): warning C4101: 'nodepoolentriesk' : unreferenced local variable
-     1>main.c(184): warning C4101: 'err' : unreferenced local variable
-     1>main.c(241): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>main.c(309): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
-     1>main.c(228): warning C4101: 'nodepoolentriesk' : unreferenced local variable
-     1>main.c(225): warning C4101: 'err' : unreferenced local variable
-     1>main.c(292): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>main.c(346): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
-     1>main.c(265): warning C4101: 'instructionmsg' : unreferenced local variable
-     1>main.c(265): warning C4101: 'buff' : unreferenced local variable
-     1>main.c(265): warning C4101: 'err' : unreferenced local variable
-     1>main.c(353): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>main.c(391): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
-     1>main.c(429): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>main.c(411): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
-     1>main.c(467): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>main.c(437): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
-     1>main.c(487): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>main.c(539): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
-     1>main.c(512): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>main.c(577): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
-     1>main.c(612): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>main.c(617): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
-     1>main.c(652): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>main.c(297): warning C4101: 'array_of_blocklengths' : unreferenced local variable
+     1>main.c(286): warning C4101: 'instructionmsg' : unreferenced local variable
+     1>main.c(299): warning C4101: 'charex' : unreferenced local variable
+     1>main.c(299): warning C4101: 'intex' : unreferenced local variable
+     1>main.c(296): warning C4101: 'array_of_types' : unreferenced local variable
+     1>main.c(292): warning C4101: 'resultlen' : unreferenced local variable
+     1>main.c(286): warning C4101: 'size' : unreferenced local variable
+     1>main.c(287): warning C4101: 'actioncompleted' : unreferenced local variable
+     1>main.c(291): warning C4101: 'instructmsg_mpi_t' : unreferenced local variable
+     1>main.c(293): warning C4101: 'status' : unreferenced local variable
+     1>main.c(298): warning C4101: 'array_of_displaysments' : unreferenced local variable
+     1>main.c(288): warning C4101: 'hostnamelen' : unreferenced local variable
+     1>main.c(299): warning C4101: 'lb' : unreferenced local variable
+     1>main.c(654): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
-     1>main.c(690): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>main.c(683): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
-     1>main.c(397): warning C4101: 'array_of_blocklengths' : unreferenced local variable
-     1>main.c(386): warning C4101: 'instructionmsg' : unreferenced local variable
-     1>main.c(399): warning C4101: 'charex' : unreferenced local variable
-     1>main.c(399): warning C4101: 'intex' : unreferenced local variable
-     1>main.c(396): warning C4101: 'array_of_types' : unreferenced local variable
-     1>main.c(392): warning C4101: 'resultlen' : unreferenced local variable
-     1>main.c(386): warning C4101: 'size' : unreferenced local variable
-     1>main.c(387): warning C4101: 'actioncompleted' : unreferenced local variable
-     1>main.c(391): warning C4101: 'instructmsg_mpi_t' : unreferenced local variable
-     1>main.c(393): warning C4101: 'status' : unreferenced local variable
-     1>main.c(398): warning C4101: 'array_of_displaysments' : unreferenced local variable
-     1>main.c(388): warning C4101: 'hostnamelen' : unreferenced local variable
-     1>main.c(399): warning C4101: 'lb' : unreferenced local variable
-     1>main.c(739): warning C4101: 'i' : unreferenced local variable
-     1>main.c(789): warning C4101: 'k' : unreferenced local variable
-     1>main.c(803): warning C4101: 'k' : unreferenced local variable
-     1>main.c(812): warning C4101: 'i' : unreferenced local variable
-     1>main.c(812): warning C4101: 'k' : unreferenced local variable
-     1>main.c(827): warning C4101: 'i' : unreferenced local variable
-     1>main.c(827): warning C4101: 'k' : unreferenced local variable
-     1>main.c(847): warning C4101: 'charex' : unreferenced local variable
-     1>c:\users\steve\documents\visual studio 2010\projects\cs486_project2\cs486_project2\main.c(712): warning C4715: 'executeinstruction' : not all control paths return a value
+     1>main.c(670): warning C4101: 'nodepoolentriesk' : unreferenced local variable
+     1>main.c(669): warning C4101: 'actioncompleted' : unreferenced local variable
+     1>main.c(667): warning C4101: 'err' : unreferenced local variable
+     1>main.c(726): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
+     1>main.c(713): warning C4101: 'nodepoolentriesk' : unreferenced local variable
+     1>main.c(712): warning C4101: 'actioncompleted' : unreferenced local variable
+     1>main.c(710): warning C4101: 'err' : unreferenced local variable
+     1>main.c(769): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\string.h(105) : see declaration of 'strcpy'
+     1>main.c(756): warning C4101: 'nodepoolentriesk' : unreferenced local variable
+     1>main.c(754): warning C4101: 'err' : unreferenced local variable
+     1>main.c(821): warning C4101: 'i' : unreferenced local variable
+     1>main.c(871): warning C4101: 'k' : unreferenced local variable
+     1>main.c(885): warning C4101: 'k' : unreferenced local variable
+     1>main.c(894): warning C4101: 'k' : unreferenced local variable
+     1>main.c(903): warning C4101: 'i' : unreferenced local variable
+     1>main.c(903): warning C4101: 'k' : unreferenced local variable
+     1>main.c(918): warning C4101: 'i' : unreferenced local variable
+     1>main.c(918): warning C4101: 'k' : unreferenced local variable
+     1>c:\users\steve\documents\visual studio 2010\projects\cs486_project2\cs486_project2\main.c(644): warning C4715: 'executeinstruction' : not all control paths return a value
        Done executing task "CL".
      1>Done building target "ClCompile" in project "CS486_Project2.vcxproj".
        Target "ManagedIncrementalBuildPostProcessDependencyGraph" skipped, due to false condition; ('@(ClCompile)' != '' and '$(EnableManagedIncrementalBuild)' == 'True') was evaluated as ('hashtable.c;main.c' != '' and 'false' == 'True').
@@ -432,10 +435,10 @@
        Task "WriteLinesToFile" skipped, due to false condition; ('$(ConfigurationType)'=='DynamicLibrary' AND !EXISTS('@(ManifestResourceCompile)')) was evaluated as ('Application'=='DynamicLibrary' AND !EXISTS('x64\Debug\CS486_Project2_manifest.rc')).
        Using "RC" task from assembly "Microsoft.Build.CppTasks.Common, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
        Task "RC"
-         Using cached output dependency table built from:
-         	C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug\rc.write.1.tlog
-         Using cached input dependency table built from:
-         	C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug\rc.read.1.tlog
+         Write Tracking Logs:
+         	x64\Debug\rc.write.1.tlog
+         Read Tracking Logs:
+         	x64\Debug\rc.read.1.tlog
          Outputs for C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\CS486_PROJECT2_MANIFEST.RC:
          	C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\CS486_PROJECT2.EXE.EMBED.MANIFEST.RES
          All outputs are up-to-date.
@@ -487,20 +490,20 @@
      1>Target "Link" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Platforms\x64\Microsoft.Cpp.x64.Targets" from project "C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\CS486_Project2.vcxproj" (target "_Link" depends on it):
        Using "Link" task from assembly "Microsoft.Build.CppTasks.x64, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
        Task "Link"
-         Using cached output dependency table built from:
-         	C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug\link.write.1.tlog
-         	C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug\link.6640-cvtres.write.1.tlog
-         	C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug\link.6640.write.1.tlog
-         	C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug\link-cvtres.write.1.tlog
-         	C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug\link.6640-cvtres.write.1.tlog
-         	C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug\link-cvtres.write.1.tlog
-         Using cached input dependency table built from:
-         	C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug\link.read.1.tlog
-         	C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug\link.6640-cvtres.read.1.tlog
-         	C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug\link.6640.read.1.tlog
-         	C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug\link-cvtres.read.1.tlog
-         	C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug\link.6640-cvtres.read.1.tlog
-         	C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug\link-cvtres.read.1.tlog
+         Write Tracking Logs:
+         	x64\Debug\link.write.1.tlog
+         	x64\Debug\link.14272-cvtres.write.1.tlog
+         	x64\Debug\link.14272.write.1.tlog
+         	x64\Debug\link-cvtres.write.1.tlog
+         	x64\Debug\link.14272-cvtres.write.1.tlog
+         	x64\Debug\link-cvtres.write.1.tlog
+         Read Tracking Logs:
+         	x64\Debug\link.read.1.tlog
+         	x64\Debug\link.14272-cvtres.read.1.tlog
+         	x64\Debug\link.14272.read.1.tlog
+         	x64\Debug\link-cvtres.read.1.tlog
+         	x64\Debug\link.14272-cvtres.read.1.tlog
+         	x64\Debug\link-cvtres.read.1.tlog
          Outputs for C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\CS486_PROJECT2.EXE.EMBED.MANIFEST.RES|C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\HASHTABLE.OBJ|C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\MAIN.OBJ:
          	C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\X64\DEBUG\CS486_PROJECT2.ILK
          	C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\X64\DEBUG\CS486_PROJECT2.EXE
@@ -525,18 +528,20 @@
          	C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\CS486_PROJECT2.EXE.EMBED.MANIFEST.RES
          	C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\HASHTABLE.OBJ
          	C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\MAIN.OBJ
-         	C:\WINDOWS\SYSTEM32\TZRES.DLL
          	C:\WINDOWS\GLOBALIZATION\SORTING\SORTDEFAULT.NLS
          	C:\PROGRAM FILES (X86)\MICROSOFT VISUAL STUDIO 10.0\VC\LIB\AMD64\MSVCRTD.LIB
          	C:\PROGRAM FILES (X86)\MICROSOFT VISUAL STUDIO 10.0\VC\LIB\AMD64\OLDNAMES.LIB
+         	C:\PROGRAM FILES (X86)\MICROSOFT VISUAL STUDIO 10.0\VC\BIN\CVTRES.EXE
+         	C:\WINDOWS\SYSTEM32\TZRES.DLL
+         	C:\PROGRAM FILES (X86)\MICROSOFT VISUAL STUDIO 10.0\VC\BIN\X86_AMD64\LINK.EXE
          Source compilation required: input C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\MAIN.OBJ is newer than output C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\CS486_PROJECT2.EXE.INTERMEDIATE.MANIFEST.
          Environment Variables passed to tool:
-           VS_UNICODE_OUTPUT=1528
+           VS_UNICODE_OUTPUT=1548
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\x64\Debug\CS486_Project2.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files\Microsoft MPI\Lib\amd64\\" msmpi.lib msmpifec.lib msmpifmc.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"x64\Debug\CS486_Project2.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\x64\Debug\CS486_Project2.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\x64\Debug\CS486_Project2.lib" /MACHINE:X64 x64\Debug\CS486_Project2.exe.embed.manifest.res
          x64\Debug\hashtable.obj
          x64\Debug\main.obj
          Tracking command:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\bin\NETFX 4.0 Tools\Tracker.exe /a /d C:\Windows\Microsoft.NET\Framework\v4.0.30319\FileTracker.dll /i "C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug" /r "C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\CS486_PROJECT2.EXE.EMBED.MANIFEST.RES|C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\HASHTABLE.OBJ|C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\MAIN.OBJ" /b MSBuildConsole_CancelEvent2e763aa0e2bf46689ca6abd433591bab  /c "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\link.exe"  /ERRORREPORT:PROMPT /OUT:"C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\x64\Debug\CS486_Project2.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files\Microsoft MPI\Lib\amd64\\" msmpi.lib msmpifec.lib msmpifmc.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"x64\Debug\CS486_Project2.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\x64\Debug\CS486_Project2.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\x64\Debug\CS486_Project2.lib" /MACHINE:X64 x64\Debug\CS486_Project2.exe.embed.manifest.res
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\bin\NETFX 4.0 Tools\Tracker.exe /a /d C:\Windows\Microsoft.NET\Framework\v4.0.30319\FileTracker.dll /i "C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug" /r "C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\CS486_PROJECT2.EXE.EMBED.MANIFEST.RES|C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\HASHTABLE.OBJ|C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\MAIN.OBJ" /b MSBuildConsole_CancelEvent50a07a52a3594333b1321d5d8f28fce8  /c "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\link.exe"  /ERRORREPORT:PROMPT /OUT:"C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\x64\Debug\CS486_Project2.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files\Microsoft MPI\Lib\amd64\\" msmpi.lib msmpifec.lib msmpifmc.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"x64\Debug\CS486_Project2.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\x64\Debug\CS486_Project2.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\x64\Debug\CS486_Project2.lib" /MACHINE:X64 x64\Debug\CS486_Project2.exe.embed.manifest.res
          x64\Debug\hashtable.obj
          x64\Debug\main.obj
        Done executing task "Link".
@@ -569,7 +574,7 @@
        Task "Mt"
          c:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"x64\Debug\CS486_Project2.exe.embed.manifest" /manifest x64\Debug\CS486_Project2.exe.intermediate.manifest
          Tracking command:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\bin\NETFX 4.0 Tools\Tracker.exe /d C:\Windows\Microsoft.NET\Framework\v4.0.30319\FileTracker.dll /i "C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug" /r "C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\CS486_PROJECT2.EXE.INTERMEDIATE.MANIFEST" /b MSBuildConsole_CancelEventf6dee970d60341458e1da5a8cf0946d5  /c "c:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe"  /nologo /verbose /out:"x64\Debug\CS486_Project2.exe.embed.manifest" /manifest x64\Debug\CS486_Project2.exe.intermediate.manifest
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\bin\NETFX 4.0 Tools\Tracker.exe /d C:\Windows\Microsoft.NET\Framework\v4.0.30319\FileTracker.dll /i "C:\Users\steve\Documents\Visual Studio 2010\Projects\CS486_Project2\CS486_Project2\x64\Debug" /r "C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\CS486_PROJECT2.EXE.INTERMEDIATE.MANIFEST" /b MSBuildConsole_CancelEvent1601c6468e284426ac04885ff64ef696  /c "c:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe"  /nologo /verbose /out:"x64\Debug\CS486_Project2.exe.embed.manifest" /manifest x64\Debug\CS486_Project2.exe.intermediate.manifest
        Done executing task "Mt".
        Task "RC"
          Using cached output dependency table built from:
@@ -586,17 +591,17 @@
        Task "Link"
          Write Tracking Logs:
          	x64\Debug\link.write.1.tlog
-         	x64\Debug\link.6640-cvtres.write.1.tlog
-         	x64\Debug\link.6640.write.1.tlog
+         	x64\Debug\link.14272-cvtres.write.1.tlog
+         	x64\Debug\link.14272.write.1.tlog
          	x64\Debug\link-cvtres.write.1.tlog
-         	x64\Debug\link.6640-cvtres.write.1.tlog
+         	x64\Debug\link.14272-cvtres.write.1.tlog
          	x64\Debug\link-cvtres.write.1.tlog
          Read Tracking Logs:
          	x64\Debug\link.read.1.tlog
-         	x64\Debug\link.6640-cvtres.read.1.tlog
-         	x64\Debug\link.6640.read.1.tlog
+         	x64\Debug\link.14272-cvtres.read.1.tlog
+         	x64\Debug\link.14272.read.1.tlog
          	x64\Debug\link-cvtres.read.1.tlog
-         	x64\Debug\link.6640-cvtres.read.1.tlog
+         	x64\Debug\link.14272-cvtres.read.1.tlog
          	x64\Debug\link-cvtres.read.1.tlog
          Outputs for C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\CS486_PROJECT2.EXE.EMBED.MANIFEST.RES|C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\HASHTABLE.OBJ|C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\CS486_PROJECT2\X64\DEBUG\MAIN.OBJ:
          	C:\USERS\STEVE\DOCUMENTS\VISUAL STUDIO 2010\PROJECTS\CS486_PROJECT2\X64\DEBUG\CS486_PROJECT2.ILK

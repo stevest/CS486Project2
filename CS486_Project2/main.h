@@ -7,6 +7,7 @@
 #include "hashtable.h"
 
 #define MAX_LINE 1024
+int EBUG = 0;
 
 typedef struct instructionmsg_s{
 	char instruction[MAX_LINE];
@@ -29,6 +30,8 @@ typedef struct mpiconfig_s{
 	int predrank;
 	int succrank;
 	int stopexecution;
+	MPI_Request pendingsend;
+	MPI_Request pendingreceive;
 }mpiconfig_t;
 
 int find( mpiconfig_t *mpicfg, int id );
@@ -49,7 +52,9 @@ int aliveprocs_remove( mpiconfig_t *mpicfg, int id );
 
 int aliveprocs_find( mpiconfig_t *mpicfg, int id );
 
-int aliveprocs_len( mpiconfig_t *mpicfg, int id );
+int aliveprocs_len( mpiconfig_t *mpicfg );
+
+int aliveprocs_maxid( mpiconfig_t *mpicfg );
 
 int aliveprocs_pred( mpiconfig_t *mpicfg, int id );
 

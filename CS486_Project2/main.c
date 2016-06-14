@@ -8,16 +8,13 @@ int main(int argc, char **argv)
 {
 	int i, size, ierr, instructionmsg, ctr;
 	char hostname[MAX_LINE];
-	int hostnamelen, nodepoolnumel, filepoolnumel, claimedfilepoolnumel;
+	int hostnamelen, filepoolnumel, claimedfilepoolnumel;
 	int *nodepoolentriesk, *nodepoolentriesv;
 	int *filepoolkeys, *claimedfilepoolkeys;
 	mpiconfig_t mpicfg;
 	MPI_Datatype instructmsg_mpi_t;
-	char errstr[MAX_LINE];
-	int resultlen;
-	MPI_Status status;
 
-		MPI_Datatype array_of_types[3];
+	MPI_Datatype array_of_types[3];
 	int array_of_blocklengths[3];
 	MPI_Aint array_of_displaysments[3];
 	MPI_Aint intex, charex, lb;
@@ -51,7 +48,7 @@ int main(int argc, char **argv)
 
 	mpicfg.imsg_t = instructmsg_mpi_t;
 
-	printf("Hello world!  I am process number: %d on host %s\n", mpicfg.rank, hostname);
+	if(EBUG){printf("Hello world!  I am process number: %d on host %s\n", mpicfg.rank, hostname);}
 
 	//hashtable_t *nodepool;
 	/* Create node/file pool hash table */
@@ -64,6 +61,7 @@ int main(int argc, char **argv)
 	for ( i = 0 ; i < mpicfg.num_procs ; i++) {
 		mpicfg.aliveprocs[i]  = -1;
 	}
+	mpicfg.id = -1;
 	mpicfg.stopexecution = 0;
 
 	
@@ -74,8 +72,10 @@ int main(int argc, char **argv)
 		/* the coordinator node must be different from the others!! */
 		/* Execute next instruction */
 		join( &mpicfg, 1 );
+		join( &mpicfg, 4 );
 		join( &mpicfg, 8 );
-		insert( &mpicfg, 2 );
+		join( &mpicfg, 6 );
+		insert( &mpicfg, 9 );
 		insert( &mpicfg, 3 );
 		insert( &mpicfg, 4 );
 		insert( &mpicfg, 9 );
@@ -84,9 +84,9 @@ int main(int argc, char **argv)
 		del( &mpicfg, 4 );
 		find( &mpicfg, 4 );
 		find( &mpicfg, 3 );
-		//leave( &mpicfg, 8 );
-		//find( &mpicfg, 3 );
-		end( &mpicfg);
+		leave( &mpicfg, 8 );
+		find( &mpicfg, 3 );
+		
 
 		/*find( &mpicfg, 8 );
 		insert( &mpicfg, 5 );
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
 		insert( &mpicfg, 7 );
 		insert( &mpicfg, 8 );
 		*/
-
+		end( &mpicfg);
 
 	}else{
 
@@ -103,165 +103,23 @@ int main(int argc, char **argv)
 			/* Wait instruction message: */
 			MPI_Recv(&mpicfg.imsg, 1, mpicfg.imsg_t, 0, 0, MPI_COMM_WORLD,
 				 MPI_STATUS_IGNORE);
-			//MPI_Error_string(status.MPI_ERROR, errstr, &resultlen);
-			//printf("Process with rank %d id is: %d. \n", mpicfg.rank, mpicfg.imsg.id );
-			//printf("Process with rank %d error is: %s. \n", mpicfg.rank, errstr );
-			//printf("Process with rank %d woken up by coordinator. \n", mpicfg.rank );
-
 			/* Execute whatever instruction in that message */
 			executeinstruction(&mpicfg, mpicfg.imsg);
 		}
 
-		
-
 	}
+
+	free(mpicfg.procstatus);
+	free(mpicfg.aliveprocs);
 
 	ierr = MPI_Finalize();
 
 	return 0;
 }
 
-int end( mpiconfig_t *mpicfg){
-	int i;
-
-	/* constraint: only coordinator process */
-	if (mpicfg->rank != 0){return -1;}
-
-	/* send instruction message to all processes */
-	strcpy( mpicfg->imsg.instruction, "stopexecution" );
-	mpicfg->imsg.id = -1;
-	mpicfg->imsg.senderrank = -1;
-	for (i = 0 ; i < mpicfg->num_procs ; i++){
-		if (i != 0){
-			MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, i, 0, MPI_COMM_WORLD);
-		}
-	}
-
-	return 0;
-}
-
-int del( mpiconfig_t *mpicfg, int id ){
-	int i, err;
-	int nodepoolnumel;
-	int actioncompleted;
-	int *nodepoolentriesk, *nodepoolentriesv;
-
-	/* constraint: only coordinator process */
-	if (mpicfg->rank != 0){return -1;}
-
-	/* get ranks of active processes */
-	nodepoolnumel = mpicfg->nodepool->nentries;
-	nodepoolentriesv = (int*)calloc(nodepoolnumel, sizeof(int));
-	if ( ht_dumpvalues( mpicfg->nodepool, nodepoolentriesv ) < 0){
-		printf("error in HT dump!\n");
-	}
-
-	/* send instruction message to all other awake processes */
-	strcpy( mpicfg->imsg.instruction, "del" );
-	mpicfg->imsg.id = id;
-	mpicfg->imsg.senderrank = mpicfg->rank;
-	for (i = 0 ; i < nodepoolnumel ; i++){
-		if (nodepoolentriesv[i] != 0){
-			MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, nodepoolentriesv[i], 0, MPI_COMM_WORLD);
-		}
-	}
-
-	/* wait confirmation (or every other message that might come) */
-	/* confirmation is comming from the process that completes the insertion */
-	actioncompleted = 0;
-	while (!actioncompleted){
-		MPI_Recv(&mpicfg->imsg, 1, mpicfg->imsg_t, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE );
-		executeinstruction(mpicfg, mpicfg->imsg);
-		if ( strcmp( mpicfg->imsg.instruction, "completed") == 0 ){break;}
-	}
-
-	free(nodepoolentriesv);
-
-	return 0;
-}
-
-int find( mpiconfig_t *mpicfg, int id ){
-	int i, err;
-	int nodepoolnumel;
-	int actioncompleted;
-	int *nodepoolentriesk, *nodepoolentriesv;
-
-	/* constraint: only coordinator process */
-	if (mpicfg->rank != 0){return -1;}
-
-	/* get ranks of active processes */
-	nodepoolnumel = mpicfg->nodepool->nentries;
-	nodepoolentriesv = (int*)calloc(nodepoolnumel, sizeof(int));
-	if ( ht_dumpvalues( mpicfg->nodepool, nodepoolentriesv ) < 0){
-		printf("error in HT dump!\n");
-	}
-
-	/* send instruction message to all other awake processes */
-	strcpy( mpicfg->imsg.instruction, "find" );
-	mpicfg->imsg.id = id;
-	mpicfg->imsg.senderrank = mpicfg->rank;
-	for (i = 0 ; i < nodepoolnumel ; i++){
-		if (nodepoolentriesv[i] != 0){
-			MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, nodepoolentriesv[i], 0, MPI_COMM_WORLD);
-		}
-	}
-
-	/* wait confirmation (or every other message that might come) */
-	/* confirmation is comming from the process that completes the insertion */
-	actioncompleted = 0;
-	while (!actioncompleted){
-		MPI_Recv(&mpicfg->imsg, 1, mpicfg->imsg_t, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE );
-		executeinstruction(mpicfg, mpicfg->imsg);
-		if ( strcmp( mpicfg->imsg.instruction, "completed") == 0 ){break;}
-	}
-
-	free(nodepoolentriesv);
-
-	return 0;
-}
-
-
-int insert( mpiconfig_t *mpicfg, int id ){
-	int i, err;
-	int nodepoolnumel;
-	int actioncompleted;
-	int *nodepoolentriesk, *nodepoolentriesv;
-
-	/* constraint: only coordinator process */
-	if (mpicfg->rank != 0){return -1;}
-
-	/* get ranks of active processes */
-	nodepoolnumel = mpicfg->nodepool->nentries;
-	nodepoolentriesv = (int*)calloc(nodepoolnumel, sizeof(int));
-	if ( ht_dumpvalues( mpicfg->nodepool, nodepoolentriesv ) < 0){
-		printf("error in HT dump!\n");
-	}
-
-	/* send instruction message to all other awake processes */
-	strcpy( mpicfg->imsg.instruction, "insert" );
-	mpicfg->imsg.id = id;
-	mpicfg->imsg.senderrank = mpicfg->rank;
-	for (i = 0 ; i < nodepoolnumel ; i++){
-		if (nodepoolentriesv[i] != 0){
-			MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, nodepoolentriesv[i], 0, MPI_COMM_WORLD);
-		}
-	}
-
-	/* wait confirmation (or every other message that might come) */
-	/* confirmation is comming from the process that completes the insertion */
-	actioncompleted = 0;
-	while (!actioncompleted){
-		MPI_Recv(&mpicfg->imsg, 1, mpicfg->imsg_t, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE );
-		executeinstruction(mpicfg, mpicfg->imsg);
-		if ( strcmp( mpicfg->imsg.instruction, "completed") == 0 ){break;}
-	}
-
-	free(nodepoolentriesv);
-
-	return 0;
-}
 
 int join( mpiconfig_t *mpicfg, int id ){
+	int i;
 	int next_available_rank, pred, succ, instructionmsg, buff, err;
 	int nodepoolnumel;
 	int actioncompleted;
@@ -289,45 +147,87 @@ int join( mpiconfig_t *mpicfg, int id ){
 	pred = aliveprocs_pred(mpicfg,id);
 	succ = aliveprocs_succ(mpicfg,id);
 	
-	strcpy( mpicfg->imsg.instruction, "join" );
-	mpicfg->imsg.id = id;
+
 	
 	if ( next_available_rank == mpicfg->rank ){
+		mpicfg->id = id;
 		mpicfg->predid = pred;
 		mpicfg->succid = succ;
-
-		//MPI_Send(&instructionmsg, 1, MPI_INT, next_available_rank, 0, MPI_COMM_SELF);
+		mpicfg->predrank = ht_get( mpicfg->nodepool, mpicfg->predid );
+		mpicfg->succrank = ht_get( mpicfg->nodepool, mpicfg->succid );
 	}else{
-		/* send instruction message */
-		MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, next_available_rank, 0, MPI_COMM_WORLD);
-
-		/* send HT size */
+		
+		/* update other processes for the new member */
+		/* get ranks of active processes */
 		nodepoolnumel = mpicfg->nodepool->nentries;
-		MPI_Send(&nodepoolnumel, 1, MPI_INT, next_available_rank, 0, MPI_COMM_WORLD);
-		/*Send keys (ids) */
-		nodepoolentriesk = (int*)calloc(nodepoolnumel, sizeof(int));
-		if ( ht_dumpkeys( mpicfg->nodepool, nodepoolentriesk ) < 0){
-			printf("error in HT dump!\n");
-		}
-		MPI_Send(nodepoolentriesk, nodepoolnumel, MPI_INT, next_available_rank, 0, MPI_COMM_WORLD);
-		/*dump values (ranks) */
 		nodepoolentriesv = (int*)calloc(nodepoolnumel, sizeof(int));
 		if ( ht_dumpvalues( mpicfg->nodepool, nodepoolentriesv ) < 0){
 			printf("error in HT dump!\n");
 		}
-		MPI_Send(nodepoolentriesv, nodepoolnumel, MPI_INT, next_available_rank, 0, MPI_COMM_WORLD);
 
-		/* bcast other info */
-		MPI_Bcast(mpicfg->procstatus, mpicfg->num_procs, MPI_INT , 0, MPI_COMM_WORLD);
-		MPI_Bcast(mpicfg->aliveprocs, mpicfg->num_procs, MPI_INT , 0, MPI_COMM_WORLD);
+		/* send instruction message to all other awake processes */
+		strcpy( mpicfg->imsg.instruction, "update" );
+		mpicfg->imsg.id = id;
+		mpicfg->imsg.senderrank = mpicfg->rank;
+		
+		for (i = 0 ; i < nodepoolnumel ; i++){
+			if (nodepoolentriesv[i] != mpicfg->rank) {
+
+				MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, nodepoolentriesv[i], 0, MPI_COMM_WORLD);
+
+				/* bcast other info */
+				MPI_Bcast(mpicfg->procstatus, mpicfg->num_procs, MPI_INT , 0, MPI_COMM_WORLD);
+				MPI_Bcast(mpicfg->aliveprocs, mpicfg->num_procs, MPI_INT , 0, MPI_COMM_WORLD);
+
+				/* send HT size */
+				//nodepoolnumel = mpicfg->nodepool->nentries;
+				MPI_Send(&nodepoolnumel, 1, MPI_INT, nodepoolentriesv[i], 0, MPI_COMM_WORLD);
+				/*Send keys (ids) */
+				nodepoolentriesk = (int*)calloc(nodepoolnumel, sizeof(int));
+				if ( ht_dumpkeys( mpicfg->nodepool, nodepoolentriesk ) < 0){
+					printf("error in HT dump!\n");
+				}
+				MPI_Send(nodepoolentriesk, nodepoolnumel, MPI_INT, nodepoolentriesv[i], 0, MPI_COMM_WORLD);
+				/*dump values (ranks) */
+				//nodepoolentriesv = (int*)calloc(nodepoolnumel, sizeof(int));
+				if ( ht_dumpvalues( mpicfg->nodepool, nodepoolentriesv ) < 0){
+					printf("error in HT dump!\n");
+				}
+				MPI_Send(nodepoolentriesv, nodepoolnumel, MPI_INT, nodepoolentriesv[i], 0, MPI_COMM_WORLD);
+				
+				
+				
+				/* wait confirmation */
+				while (1){
+					if (nodepoolentriesv[i] != mpicfg->rank) {
+						MPI_Recv(&mpicfg->imsg, 1, mpicfg->imsg_t, nodepoolentriesv[i], 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE );
+						executeinstruction(mpicfg, mpicfg->imsg);
+						if ( strcmp( mpicfg->imsg.instruction, "completed") == 0 ){
+							break;
+						}
+					}
+				}
+				
+			}
+			
+		}
+		
+		
+
+		/* send instruction message */
+		strcpy( mpicfg->imsg.instruction, "join" );
+		mpicfg->imsg.id = id;
+		MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, next_available_rank, 0, MPI_COMM_WORLD);
 		
 		/* wait confirmation (or every other message that might come) */
-		actioncompleted = 0;
-		while (!actioncompleted){
+		while (1){
 			MPI_Recv(&mpicfg->imsg, 1, mpicfg->imsg_t, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE );
 			executeinstruction(mpicfg, mpicfg->imsg);
 			if ( strcmp( mpicfg->imsg.instruction, "completed") == 0 ){break;}
 		}
+
+		free(nodepoolentriesv);
+		free(nodepoolentriesk);
 	}
 
 	//xxx 8elw ena barrier prokeimenou na min mplextoun ta locally exxecuted pred/succ twn workers.
@@ -391,7 +291,7 @@ int executeinstruction(mpiconfig_t *mpicfg, instructionmsg_t imsg){
 	MPI_Datatype instructmsg_mpi_t;
 	int resultlen;
 	MPI_Status status;
-	int fid;
+	int fid, maxpid;
 
 	MPI_Datatype array_of_types[2];
 	int array_of_blocklengths[2];
@@ -402,29 +302,9 @@ int executeinstruction(mpiconfig_t *mpicfg, instructionmsg_t imsg){
 	if ( strcmp( mpicfg->imsg.instruction, "join") == 0 )
 	{
 		/* Process is reading the newspaper */
-		printf("Proccess %d received JOIN. \n", mpicfg->rank );
-		/* Get updates on ht */
-		MPI_Recv(&nodepoolnumel, 1, MPI_INT, 0, 0, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-		nodepoolentriesk = (int*)calloc(nodepoolnumel, sizeof(int));
-		MPI_Recv(nodepoolentriesk, nodepoolnumel, MPI_INT, 0, 0, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-		nodepoolentriesv = (int*)calloc(nodepoolnumel, sizeof(int));
-		MPI_Recv(nodepoolentriesv, nodepoolnumel, MPI_INT, 0, 0, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-		/* Update local nodepool */
-		for (i=0;i<nodepoolnumel;i++){
-			ht_set( mpicfg->nodepool, nodepoolentriesk[i], nodepoolentriesv[i]);
-		}
-
-		/* Get updates on helper arrays */
-		MPI_Bcast(mpicfg->procstatus, mpicfg->num_procs, MPI_INT , 0, MPI_COMM_WORLD);
-		MPI_Bcast(mpicfg->aliveprocs, mpicfg->num_procs, MPI_INT , 0, MPI_COMM_WORLD);
-		printf("Proccess %d woken up and informed by coordinator. \n", mpicfg->rank );
-
+		if(EBUG){printf("Proccess %d received JOIN. \n", mpicfg->rank );}
+		
 		mpicfg->id = mpicfg->imsg.id;
-		/* Get pred/succ from local info */
-		mpicfg->predid = aliveprocs_pred(mpicfg,mpicfg->imsg.id);
-		mpicfg->succid = aliveprocs_succ(mpicfg,mpicfg->imsg.id);
-		mpicfg->predrank = ht_get( mpicfg->nodepool, mpicfg->predid );
-		mpicfg->succrank = ht_get( mpicfg->nodepool, mpicfg->succid );
 		/* Request file ids from successor */
 		strcpy( mpicfg->imsg.instruction, "claimfiles" );
 		mpicfg->imsg.id = mpicfg->id;
@@ -460,21 +340,65 @@ int executeinstruction(mpiconfig_t *mpicfg, instructionmsg_t imsg){
 
 		free(filepoolkeys);
 		free(claimedfilepoolkeys);
-		free(nodepoolentriesv);
-		free(nodepoolentriesk);
 
+		if(EBUG){printf("Proccess %d COMPLETED JOIN. \n", mpicfg->rank );}
 		/* Join completed; inform coordinator */
 		strcpy( mpicfg->imsg.instruction, "completed" );
 		mpicfg->imsg.id = -1;
-		mpicfg->imsg.senderrank = -1;
+		mpicfg->imsg.senderrank = mpicfg->rank;
 		//printf("Proccess %d is about to send complete for join. \n", mpicfg->rank );
 		MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, 0, 0, MPI_COMM_WORLD);
-		printf("Proccess %d COMPLETED JOIN. \n", mpicfg->rank );
+		
+
+	}
+	else if ( strcmp( mpicfg->imsg.instruction, "update") == 0 )
+	{
+		/* Process is reading the newspaper */
+		if(EBUG){printf("Proccess %d received UPDATE for id %d. \n", mpicfg->rank, mpicfg->imsg.id );}
+		if ( mpicfg->id < 0){
+			mpicfg->id = mpicfg->imsg.id;
+		}
+
+		/* Get updates on helper arrays */
+		MPI_Bcast(mpicfg->procstatus, mpicfg->num_procs, MPI_INT , 0, MPI_COMM_WORLD);
+		MPI_Bcast(mpicfg->aliveprocs, mpicfg->num_procs, MPI_INT , 0, MPI_COMM_WORLD);
+		/* Get updates on ht */
+		MPI_Recv(&nodepoolnumel, 1, MPI_INT, 0, 0, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+		nodepoolentriesk = (int*)calloc(nodepoolnumel, sizeof(int));
+		MPI_Recv(nodepoolentriesk, nodepoolnumel, MPI_INT, 0, 0, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+		nodepoolentriesv = (int*)calloc(nodepoolnumel, sizeof(int));
+		MPI_Recv(nodepoolentriesv, nodepoolnumel, MPI_INT, 0, 0, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+		
+		//printf("Proccess %d woken up and informed by coordinator. \n", mpicfg->rank );
+		/* Update local nodepool */
+		for (i=0;i<nodepoolnumel;i++){
+			ht_set( mpicfg->nodepool, nodepoolentriesk[i], nodepoolentriesv[i]);
+		}
+
+		
+
+		/* Get pred/succ from local info */
+		mpicfg->predid = aliveprocs_pred(mpicfg,mpicfg->imsg.id);
+		mpicfg->succid = aliveprocs_succ(mpicfg,mpicfg->imsg.id);
+		mpicfg->predrank = ht_get( mpicfg->nodepool, mpicfg->predid );
+		mpicfg->succrank = ht_get( mpicfg->nodepool, mpicfg->succid );
+
+		free(nodepoolentriesv);
+		free(nodepoolentriesk);
+
+		if(EBUG){printf("Proccess %d COMPLETED UPDATE. \n", mpicfg->rank );}
+		/* Join completed; inform coordinator */
+		strcpy( mpicfg->imsg.instruction, "completed" );
+		mpicfg->imsg.id = -1;
+		mpicfg->imsg.senderrank = mpicfg->rank;
+		//printf("Proccess %d is about to send complete for join. \n", mpicfg->rank );
+		MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, 0, 0, MPI_COMM_WORLD);
+		
 
 	}
 	else if ( strcmp( mpicfg->imsg.instruction, "leave") == 0 )
 	{
-		printf("Proccess %d received LEAVE. \n", mpicfg->rank );
+		if(EBUG){printf("Proccess %d received LEAVE. \n", mpicfg->rank );}
 
 		/* Return file ids to successor */
 		filepoolnumel = mpicfg->filepool->nentries;
@@ -508,18 +432,19 @@ int executeinstruction(mpiconfig_t *mpicfg, instructionmsg_t imsg){
 		mpicfg->predrank = -1;
 		mpicfg->succrank = -1;
 
+		if(EBUG){printf("Proccess %d COMPLETED LEAVE. \n", mpicfg->rank );}
 		/* Leave completed; inform coordinator */
 		strcpy( mpicfg->imsg.instruction, "completed" );
 		mpicfg->imsg.id = -1;
-		mpicfg->imsg.senderrank = -1;
+		mpicfg->imsg.senderrank = mpicfg->rank;;
 		//printf("Proccess %d is about to send complete for join. \n", mpicfg->rank );
 		MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, 0, 0, MPI_COMM_WORLD);
-		printf("Proccess %d COMPLETED LEAVE. \n", mpicfg->rank );
+		
 
 	}
 	else if ( strcmp( mpicfg->imsg.instruction, "claimfiles") == 0 )
 	{
-		printf("Proccess %d received CLAIMFILES. \n", mpicfg->rank );
+		if(EBUG){printf("Proccess %d received CLAIMFILES. \n", mpicfg->rank );}
 
 		/* if no files are present : */
 		if ( mpicfg->filepool->nentries > 0 ){
@@ -560,11 +485,11 @@ int executeinstruction(mpiconfig_t *mpicfg, instructionmsg_t imsg){
 		}
 
 
-		printf("Proccess %d COMPLETED CLAIMFILES. \n", mpicfg->rank );
+		if(EBUG){printf("Proccess %d COMPLETED CLAIMFILES. \n", mpicfg->rank );}
 	}
 	else if ( strcmp( mpicfg->imsg.instruction, "returnfiles") == 0 )
 	{
-		printf("Proccess %d received RETURNFILES. \n", mpicfg->rank );
+		if(EBUG){printf("Proccess %d received RETURNFILES. \n", mpicfg->rank );}
 
 		/* receive file ids from departing node */
 		MPI_Recv(&filepoolnumel, 1, MPI_INT, mpicfg->imsg.senderrank, 0, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
@@ -581,16 +506,18 @@ int executeinstruction(mpiconfig_t *mpicfg, instructionmsg_t imsg){
 			ht_set( mpicfg->filepool, filepoolkeys[i], 1);
 		}
 
+		free(filepoolkeys);
 
-		printf("Proccess %d COMPLETED RETURNFILES. \n", mpicfg->rank );
+		if(EBUG){printf("Proccess %d COMPLETED RETURNFILES. \n", mpicfg->rank );}
 	}
 	else if ( strcmp( mpicfg->imsg.instruction, "insert") == 0 )
 	{
-		printf("Proccess %d received INSERT. \n", mpicfg->rank );
+		if(EBUG){printf("Proccess %d received INSERT. \n", mpicfg->rank );}
 		fid = mpicfg->imsg.id;
+		maxpid = aliveprocs_maxid( mpicfg );
 
 		/* check if fid is eligible for insertion and insert it */
-		if( mpicfg->predid < fid && fid <= mpicfg->id  ){
+		if( ( mpicfg->predid < fid && fid <= mpicfg->id ) || ( fid > maxpid && mpicfg->id == mpicfg->aliveprocs[0] ) ){
 			ht_set( mpicfg->filepool, fid, 1 );
 
 			/* fid insert is done */
@@ -606,26 +533,24 @@ int executeinstruction(mpiconfig_t *mpicfg, instructionmsg_t imsg){
 
 			free(filepoolkeys);
 			
-			printf("Proccess %d COMPLETED INSERT. \n", mpicfg->rank );
+			if(EBUG){printf("Proccess %d COMPLETED INSERT. \n", mpicfg->rank );}
 
 			/* send completion msg to coordinator */
 			strcpy( mpicfg->imsg.instruction, "completed" );
 			mpicfg->imsg.id = fid;
 			mpicfg->imsg.senderrank = mpicfg->rank;
-			//printf("Proccess %d is about to send complete for insert. \n", mpicfg->rank );
-			MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, 0, 0, MPI_COMM_WORLD);
-
+			MPI_Isend(&mpicfg->imsg, 1, mpicfg->imsg_t, 0, 0, MPI_COMM_WORLD, &mpicfg->pendingsend);
 		}
-
 		
 	}
 	else if ( strcmp( mpicfg->imsg.instruction, "find") == 0 )
 	{
-		printf("Proccess %d received FIND. \n", mpicfg->rank );
+		if(EBUG){printf("Proccess %d received FIND. \n", mpicfg->rank );}
 		fid = mpicfg->imsg.id;
+		maxpid = aliveprocs_maxid( mpicfg );
 
 		/* check if fid is under this node */
-		if( mpicfg->predid < fid && fid <= mpicfg->id  ){
+		if( ( mpicfg->predid < fid && fid <= mpicfg->id ) || ( fid > maxpid && mpicfg->id == mpicfg->aliveprocs[0] ) ){
 			/* but might not be there */
 			err = ht_get( mpicfg->filepool, fid );
 
@@ -646,25 +571,27 @@ int executeinstruction(mpiconfig_t *mpicfg, instructionmsg_t imsg){
 
 			free(filepoolkeys);
 
-			printf("Proccess %d COMPLETED FIND. \n", mpicfg->rank );
+			if(EBUG){printf("Proccess %d COMPLETED FIND. \n", mpicfg->rank );}
 
 			/* send completion msg to coordinator */
 			strcpy( mpicfg->imsg.instruction, "completed" );
 			mpicfg->imsg.id = fid;
 			mpicfg->imsg.senderrank = mpicfg->rank;
-			printf("Proccess %d is about to send complete for find. \n", mpicfg->rank );
-			MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, 0, 0, MPI_COMM_WORLD);
+			//printf("Proccess %d is about to send complete for find. \n", mpicfg->rank );
+			//MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, 0, 0, MPI_COMM_WORLD);
+			MPI_Isend(&mpicfg->imsg, 1, mpicfg->imsg_t, 0, 0, MPI_COMM_WORLD, &mpicfg->pendingsend);
 		}
 
 		
 	}
 	else if ( strcmp( mpicfg->imsg.instruction, "del") == 0 )
 	{
-		printf("Proccess %d received DEL. \n", mpicfg->rank );
+		if(EBUG){printf("Proccess %d received DEL. \n", mpicfg->rank );}
 		fid = mpicfg->imsg.id;
+		maxpid = aliveprocs_maxid( mpicfg );
 
 		/* check if fid is eligible for deletion and insert it */
-		if( mpicfg->predid < fid && fid <= mpicfg->id  ){
+		if( ( mpicfg->predid < fid && fid <= mpicfg->id ) || ( fid > maxpid && mpicfg->id == mpicfg->aliveprocs[0] ) ){
 			err = ht_del( mpicfg->filepool, fid );
 
 			/* fid insert is done */
@@ -684,14 +611,15 @@ int executeinstruction(mpiconfig_t *mpicfg, instructionmsg_t imsg){
 
 			free(filepoolkeys);
 
-			printf("Proccess %d COMPLETED DEL. \n", mpicfg->rank );
+			if(EBUG){printf("Proccess %d COMPLETED DEL. \n", mpicfg->rank );}
 
 			/* send completion msg to coordinator */
 			strcpy( mpicfg->imsg.instruction, "completed" );
 			mpicfg->imsg.id = fid;
 			mpicfg->imsg.senderrank = mpicfg->rank;
 			//printf("Proccess %d is about to send complete for insert. \n", mpicfg->rank );
-			MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, 0, 0, MPI_COMM_WORLD);
+			//MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, 0, 0, MPI_COMM_WORLD);
+			MPI_Isend(&mpicfg->imsg, 1, mpicfg->imsg_t, 0, 0, MPI_COMM_WORLD, &mpicfg->pendingsend);
 		}
 
 		
@@ -699,7 +627,7 @@ int executeinstruction(mpiconfig_t *mpicfg, instructionmsg_t imsg){
 	else if ( strcmp( mpicfg->imsg.instruction, "completed") == 0 )
 	{
 		/*instruction completed successfully */
-		printf("Proccess %d COMPLETED COMPLETED. \n", mpicfg->rank );
+		if(EBUG){printf("Proccess %d COMPLETED COMPLETED. \n", mpicfg->rank );}
 		return 0;
 	}
 	else if ( strcmp( mpicfg->imsg.instruction, "stopexecution") == 0 )
@@ -708,7 +636,161 @@ int executeinstruction(mpiconfig_t *mpicfg, instructionmsg_t imsg){
 		messages from coordinator */
 		mpicfg->stopexecution = 1;
 	}
+	else
+	{
+		if(EBUG){printf("Proccess %d WTF. \n", mpicfg->rank );}
+	}
 
+}
+
+
+int end( mpiconfig_t *mpicfg){
+	int i;
+
+	/* constraint: only coordinator process */
+	if (mpicfg->rank != 0){return -1;}
+
+	/* send instruction message to all processes */
+	strcpy( mpicfg->imsg.instruction, "stopexecution" );
+	mpicfg->imsg.id = -1;
+	mpicfg->imsg.senderrank = mpicfg->rank;
+	for (i = 0 ; i < mpicfg->num_procs ; i++){
+		if (i != 0){
+			MPI_Send(&mpicfg->imsg, 1, mpicfg->imsg_t, i, 0, MPI_COMM_WORLD);
+		}
+	}
+
+	return 0;
+}
+
+int del( mpiconfig_t *mpicfg, int id ){
+	int i, err;
+	int nodepoolnumel;
+	int actioncompleted;
+	int *nodepoolentriesk, *nodepoolentriesv;
+
+	/* constraint: only coordinator process */
+	if (mpicfg->rank != 0){return -1;}
+
+	/* get ranks of active processes */
+	nodepoolnumel = mpicfg->nodepool->nentries;
+	nodepoolentriesv = (int*)calloc(nodepoolnumel, sizeof(int));
+	if ( ht_dumpvalues( mpicfg->nodepool, nodepoolentriesv ) < 0){
+		printf("error in HT dump!\n");
+	}
+
+	/* send instruction message to all other awake processes */
+	strcpy( mpicfg->imsg.instruction, "del" );
+	mpicfg->imsg.id = id;
+	mpicfg->imsg.senderrank = mpicfg->rank;
+	for (i = 0 ; i < nodepoolnumel ; i++){
+		MPI_Isend(&mpicfg->imsg, 1, mpicfg->imsg_t, nodepoolentriesv[i], 0, MPI_COMM_WORLD, &mpicfg->pendingsend);
+	}
+
+	/* wait confirmation (or every other message that might come) */
+	/* confirmation is comming from the process that completes the insertion */
+	while (1){
+		MPI_Recv(&mpicfg->imsg, 1, mpicfg->imsg_t, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE );
+		executeinstruction(mpicfg, mpicfg->imsg);
+		if ( strcmp( mpicfg->imsg.instruction, "completed") == 0 ){
+			if ( mpicfg->imsg.senderrank != mpicfg->rank ){
+				/* in case completion arrives before self message, handle it */
+				MPI_Wait(&mpicfg->pendingsend, MPI_STATUS_IGNORE);
+			}
+			break;
+		}
+	}
+
+	free(nodepoolentriesv);
+
+	return 0;
+}
+
+int find( mpiconfig_t *mpicfg, int id ){
+	int i, err;
+	int nodepoolnumel;
+	int actioncompleted;
+	int *nodepoolentriesk, *nodepoolentriesv;
+
+	/* constraint: only coordinator process */
+	if (mpicfg->rank != 0){return -1;}
+
+	/* get ranks of active processes */
+	nodepoolnumel = mpicfg->nodepool->nentries;
+	nodepoolentriesv = (int*)calloc(nodepoolnumel, sizeof(int));
+	if ( ht_dumpvalues( mpicfg->nodepool, nodepoolentriesv ) < 0){
+		printf("error in HT dump!\n");
+	}
+
+	/* send instruction message to all other awake processes */
+	strcpy( mpicfg->imsg.instruction, "find" );
+	mpicfg->imsg.id = id;
+	mpicfg->imsg.senderrank = mpicfg->rank;
+	for (i = 0 ; i < nodepoolnumel ; i++){
+		MPI_Isend(&mpicfg->imsg, 1, mpicfg->imsg_t, nodepoolentriesv[i], 0, MPI_COMM_WORLD, &mpicfg->pendingsend);
+	}
+
+	/* wait confirmation (or every other message that might come) */
+	/* confirmation is comming from the process that completes the insertion */
+	while (1){
+		MPI_Recv(&mpicfg->imsg, 1, mpicfg->imsg_t, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE );
+		executeinstruction(mpicfg, mpicfg->imsg);
+		if ( strcmp( mpicfg->imsg.instruction, "completed") == 0 ){
+			if ( mpicfg->imsg.senderrank != mpicfg->rank ){
+				/* in case completion arrives before self message, handle it */
+				MPI_Wait(&mpicfg->pendingsend, MPI_STATUS_IGNORE);
+			}
+			break;
+		}
+	}
+
+	free(nodepoolentriesv);
+
+	return 0;
+}
+
+
+int insert( mpiconfig_t *mpicfg, int id ){
+	int i, err;
+	int nodepoolnumel;
+	int *nodepoolentriesk, *nodepoolentriesv;
+
+	/* constraint: only coordinator process */
+	if (mpicfg->rank != 0){return -1;}
+
+	/* get ranks of active processes */
+	nodepoolnumel = mpicfg->nodepool->nentries;
+	nodepoolentriesv = (int*)calloc(nodepoolnumel, sizeof(int));
+	if ( ht_dumpvalues( mpicfg->nodepool, nodepoolentriesv ) < 0){
+		printf("error in HT dump!\n");
+	}
+
+	/* send instruction message to all other awake processes */
+	strcpy( mpicfg->imsg.instruction, "insert" );
+	mpicfg->imsg.id = id;
+	mpicfg->imsg.senderrank = mpicfg->rank;
+	for (i = 0 ; i < nodepoolnumel ; i++){
+		MPI_Isend(&mpicfg->imsg, 1, mpicfg->imsg_t, nodepoolentriesv[i], 0, MPI_COMM_WORLD, &mpicfg->pendingsend);
+	}
+
+	/* wait confirmation (or every other message that might come) */
+	/* confirmation is comming from the process that completes the insertion */
+	while (1){
+		MPI_Recv(&mpicfg->imsg, 1, mpicfg->imsg_t, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE );
+		executeinstruction(mpicfg, mpicfg->imsg);
+		if ( strcmp( mpicfg->imsg.instruction, "completed") == 0 ){
+			if ( mpicfg->imsg.senderrank != mpicfg->rank ){
+				/* in case completion arrives before self message, handle it */
+				MPI_Wait(&mpicfg->pendingsend, MPI_STATUS_IGNORE);
+			}
+			break;
+		}
+	}
+	
+
+	free(nodepoolentriesv);
+
+	return 0;
 }
 
 /* find next sleeping mpi proc */
@@ -799,7 +881,7 @@ int aliveprocs_find( mpiconfig_t *mpicfg, int id ){
 	}
 }
 
-int aliveprocs_len( mpiconfig_t *mpicfg, int id ){
+int aliveprocs_len( mpiconfig_t *mpicfg ){
 	int i, k;
 
 	for (i = 0 ; i < mpicfg->num_procs ; i++){
@@ -808,11 +890,20 @@ int aliveprocs_len( mpiconfig_t *mpicfg, int id ){
 	return i;
 }
 
+int aliveprocs_maxid( mpiconfig_t *mpicfg ){
+	int i, k;
+
+	for (i = 0 ; i < mpicfg->num_procs ; i++){
+		if ( mpicfg->aliveprocs[i] < 0 ){break;}
+	}
+	return mpicfg->aliveprocs[i-1];
+}
+
 int aliveprocs_pred( mpiconfig_t *mpicfg, int id ){
 	int i, k, idx, len;
 
 	idx = aliveprocs_find( mpicfg, id );
-	len = aliveprocs_len( mpicfg, id );
+	len = aliveprocs_len( mpicfg );
 	
 	if (idx<0){
 		return -1;
@@ -827,7 +918,7 @@ int aliveprocs_succ( mpiconfig_t *mpicfg, int id ){
 	int i, k, idx, len;
 
 	idx = aliveprocs_find( mpicfg, id );
-	len = aliveprocs_len( mpicfg, id );
+	len = aliveprocs_len( mpicfg);
 	
 	if (idx<0){
 		return -1;
@@ -838,32 +929,3 @@ int aliveprocs_succ( mpiconfig_t *mpicfg, int id ){
 	}
 }
 
-MPI_Datatype create_imsg_t(){
-	int err;
-	MPI_Datatype array_of_types[2];
-	int array_of_blocklengths[2];
-	MPI_Aint array_of_displaysments[2];
-	MPI_Datatype instructmsg_mpi_t;
-	MPI_Aint intex, charex, lb;
-
-	err = MPI_Type_get_extent(MPI_INT, &lb, &intex);
-
-
-	//Says the type of every block
-	array_of_types[0] = MPI_INT;
-	array_of_types[1] = MPI_INT;
-
-	//Says how many elements for block
-	array_of_blocklengths[0] = MAX_LINE;
-	array_of_blocklengths[1] = 1;
-
-	/*Says where every block starts in memory, counting from the beginning of the struct.*/
-	array_of_displaysments[0] = 0;
-	array_of_displaysments[1] = MAX_LINE * intex;
-
-	/*Create MPI Datatype and commit*/
-	MPI_Type_create_struct(1, array_of_blocklengths, array_of_displaysments, array_of_types, &instructmsg_mpi_t);
-	MPI_Type_commit(&instructmsg_mpi_t);
-
-	return instructmsg_mpi_t; 
-}

@@ -57,7 +57,6 @@ procpool_t *ht_newpair( int id, int rank ) {
 	}
 	*/
 	newpair->next = NULL;
-	//newpair=25;
 	return newpair;
 }
 
@@ -72,16 +71,14 @@ void ht_set( hashtable_t *hashtable, int id, int rank ) {
 
 	next = hashtable->table[ bin ];
 
-	while( next != NULL && next->id != NULL && (id > next->id) ) {
+	while( next != NULL && (id > next->id) ) {
 		last = next;
 		next = next->next;
 	}
 
 	/* There's already a pair.  Let's replace that string. */
-	if( next != NULL && next->id != NULL && (id == next->id) ) {
+	if( next != NULL && (id == next->id) ) {
 
-		//free( next->rank );
-		//next->rank = NULL;
 		next->rank = rank;
 
 		/* Nope, could't find it.  Time to grow a pair. */
@@ -115,12 +112,12 @@ int ht_get( hashtable_t *hashtable, int id ) {
 
 	/* Step through the bin, looking for our value. */
 	pair = hashtable->table[ bin ];
-	while( pair != NULL && pair->id != NULL && (id > pair->id) ) {
+	while( pair != NULL && (id > pair->id) ) {
 		pair = pair->next;
 	}
 
 	/* Did we actually find anything? */
-	if( pair == NULL || pair->id == NULL || (id != pair->id) ) {
+	if( pair == NULL || (id != pair->id) ) {
 		return -1;
 
 	} else {
@@ -142,13 +139,13 @@ int ht_del( hashtable_t *hashtable, int id ) {
 
 	/* Step through the bin, looking for our value. */
 	pair = hashtable->table[ bin ];
-	while( pair != NULL && pair->id != NULL && (id > pair->id) ) {
+	while( pair != NULL && (id > pair->id) ) {
 		last = pair;
 		pair = pair->next;
 	}
 
 	/* Did we actually find anything? */
-	if( pair == NULL || pair->id == NULL || (id != pair->id) ) {
+	if( pair == NULL || (id != pair->id) ) {
 		return -1;
 
 	} else {
@@ -179,7 +176,7 @@ int ht_dumpkeys( hashtable_t *hashtable, int *arr ) {
 
 	for ( bin = 0; bin<hashtable->size ; bin++){
 		pair = hashtable->table[ bin ];
-		while( pair != NULL && pair->id != NULL ) {
+		while( pair != NULL ) {
 			arr[ctr] = pair->id;
 			pair = pair->next;
 			ctr++;
@@ -201,7 +198,7 @@ int ht_dumpvalues( hashtable_t *hashtable, int *arr ) {
 
 	for ( bin = 0; bin<hashtable->size ; bin++){
 		pair = hashtable->table[ bin ];
-		while( pair != NULL && pair->id != NULL ) {
+		while( pair != NULL ) {
 			arr[ctr] = pair->rank;
 			pair = pair->next;
 			ctr++;
